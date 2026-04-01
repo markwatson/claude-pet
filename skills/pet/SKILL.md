@@ -60,5 +60,6 @@ The pet already exists. Read `~/.claude/pet.state` for current stats.
 If the user provided arguments, handle them:
 
 - **No arguments / "stats"**: Show a summary — name, age (from `born`), total sessions, current streak, current mood. Run `~/.claude/pet.sh` to show current output.
-- **"rename <new_name>"**: Update `name=` in `~/.claude/pet.state` AND update the default `name=` in `~/.claude/pet.sh`.
+- **"rename <new_name>"**: Update `name=` in `~/.claude/pet.state` AND update the default `name=` in `~/.claude/pet.sh`. **Important:** After changing the name, you must recompute the `hash` field in the state file. The hash is `sha256(name + born + total_sessions + last_fed + streak + last_session_date + decay_hours + prev_hash)` — concatenated with no separators. Update the hash in the state file so the pet doesn't get sick from a tamper detection false positive.
+- **"doctor"**: If the pet is sick (tampered state detected), offer to heal it by re-running `~/.claude/pet.sh` which will write a fresh valid block. The pet will recover on its next status line update. Note: this resets `last_fed` to now.
 - **"uninstall"**: Confirm first, then remove the `# Pet` block from `~/.claude/statusline-command.sh`, delete `~/.claude/pet.sh` and `~/.claude/pet.state`.
