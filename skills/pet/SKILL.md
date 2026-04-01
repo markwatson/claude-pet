@@ -1,6 +1,6 @@
 ---
+name: pet
 description: "Adopt a virtual pet for your status line, or manage your existing pet"
-user_invocable: true
 ---
 
 # Pet — Virtual Status Line Pet
