@@ -23,8 +23,11 @@ Your pet also tracks daily streaks and total sessions.
 ## Install
 
 ```bash
-claude plugin add markwatson/claude-pet
+claude plugin marketplace add markwatson/claude-pet
+claude plugin install claude-pet
 ```
+
+Restart Claude Code or run `/reload-plugins` for the skill to become available.
 
 Then run `/pet` to adopt your pet. You'll pick a name, choose an animal emoji, and the skill handles the rest.
 

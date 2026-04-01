@@ -1,0 +1,15 @@
+{
+  "name": "claude-pet",
+  "description": "A virtual pet that lives in the Claude Code status line",
+  "owner": {
+    "name": "Mark Watson"
+  },
+  "plugins": [
+    {
+      "name": "claude-pet",
+      "description": "A virtual pet that lives in the Claude Code status line. Mood reflects how often you use Claude Code.",
+      "source": "./plugins/claude-pet",
+      "category": "productivity"
+    }
+  ]
+}
