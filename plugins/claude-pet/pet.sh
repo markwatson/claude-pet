@@ -4,6 +4,7 @@
 # State integrity is protected by a hash chain — tampering makes your pet sick.
 
 STATE="$HOME/.claude/pet.state"
+LOCKFILE="$HOME/.claude/pet.lock"
 now=$(date +%s)
 today=$(date +%Y-%m-%d)
 hour=$(date +%H)
@@ -13,6 +14,47 @@ compute_hash() {
     printf '%s' "$1" | sha256sum 2>/dev/null | cut -d' ' -f1 \
         || printf '%s' "$1" | shasum -a 256 2>/dev/null | cut -d' ' -f1
 }
+
+# Portable file locking: flock (Linux) with mkdir fallback (macOS/portable)
+# Usage: acquire_lock / release_lock
+if command -v flock >/dev/null 2>&1; then
+    acquire_lock() {
+        exec 9>"$LOCKFILE"
+        flock -w 5 9
+    }
+    release_lock() {
+        flock -u 9
+        exec 9>&-
+    }
+else
+    # mkdir is atomic on all POSIX systems — perfect as a spinlock
+    acquire_lock() {
+        local attempts=0
+        while ! mkdir "$LOCKFILE.d" 2>/dev/null; do
+            attempts=$(( attempts + 1 ))
+            if [ "$attempts" -ge 50 ]; then
+                # Stale lock safety: remove if older than 10s
+                if [ -d "$LOCKFILE.d" ]; then
+                    local lock_age
+                    lock_age=$(( $(date +%s) - $(stat -f %m "$LOCKFILE.d" 2>/dev/null || stat -c %Y "$LOCKFILE.d" 2>/dev/null || echo 0) ))
+                    if [ "$lock_age" -gt 10 ]; then
+                        rmdir "$LOCKFILE.d" 2>/dev/null
+                        attempts=0
+                        continue
+                    fi
+                fi
+                return 1
+            fi
+            sleep 0.1
+        done
+    }
+    release_lock() {
+        rmdir "$LOCKFILE.d" 2>/dev/null
+    }
+fi
+
+# --- Lock, read state, update, compute hash, write, unlock ---
+acquire_lock || { echo "pet: could not acquire lock" >&2; exit 1; }
 
 # Defaults
 name=Buddy
@@ -89,6 +131,8 @@ decay_hours=$decay_hours
 prev_hash=$prev_hash
 hash=$hash
 EOF
+
+release_lock
 
 # Mood thresholds (integer hours, fractions of decay_hours)
 t_happy=$(( decay_hours * 17 / 100 ))
