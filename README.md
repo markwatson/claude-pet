@@ -34,7 +34,6 @@ Then run `/pet` to adopt your pet. You'll pick a name, choose an animal emoji, a
 ## Usage
 
 - `/pet` — check on your pet (stats, mood, streak)
-- `/pet rename <name>` — rename your pet
 - `/pet uninstall` — remove your pet
 
 ## How it works
