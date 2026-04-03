@@ -1,6 +1,6 @@
 ---
 name: pet
-description: "Adopt a virtual pet for your status line, or manage your existing pet"
+description: "Adopt a virtual pet for your status line, or check on your pet"
 ---
 
 # Pet — Virtual Status Line Pet
@@ -57,7 +57,7 @@ This is the first-time setup. Walk the user through adopting their pet:
 
 The pet already exists. Read `~/.claude/pet.state` for current stats.
 
-**Always show stats first.** Display a summary of the pet's current state:
+**Just show the pet's stats.** Display a summary of the pet's current state:
 - Name
 - Age (calculated from `born` timestamp to now)
 - Total sessions
@@ -66,6 +66,6 @@ The pet already exists. Read `~/.claude/pet.state` for current stats.
 
 Then run `~/.claude/pet.sh` to show the current status line output.
 
-If the user provided additional arguments, handle them:
+That's it — do not prompt the user with options or ask what they'd like to do. Just display the stats and stop.
 
-- **"uninstall"**: Confirm first, then remove the `# Pet` block from `~/.claude/statusline-command.sh`, delete `~/.claude/pet.sh` and `~/.claude/pet.state`.
+The only exception: if the user explicitly typed `/pet uninstall`, confirm first, then remove the `# Pet` block from `~/.claude/statusline-command.sh`, delete `~/.claude/pet.sh` and `~/.claude/pet.state`.
