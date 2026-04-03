@@ -57,8 +57,15 @@ This is the first-time setup. Walk the user through adopting their pet:
 
 The pet already exists. Read `~/.claude/pet.state` for current stats.
 
-If the user provided arguments, handle them:
+**Always show stats first.** Display a summary of the pet's current state:
+- Name
+- Age (calculated from `born` timestamp to now)
+- Total sessions
+- Current streak (days in a row)
+- Current mood
 
-- **No arguments / "stats"**: Show a summary — name, age (from `born`), total sessions, current streak, current mood. Run `~/.claude/pet.sh` to show current output.
-- **"doctor"**: If the pet is sick (tampered state detected), offer to heal it by re-running `~/.claude/pet.sh` which will write a fresh valid block. The pet will recover on its next status line update. Note: this resets `last_fed` to now.
+Then run `~/.claude/pet.sh` to show the current status line output.
+
+If the user provided additional arguments, handle them:
+
 - **"uninstall"**: Confirm first, then remove the `# Pet` block from `~/.claude/statusline-command.sh`, delete `~/.claude/pet.sh` and `~/.claude/pet.state`.
